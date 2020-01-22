@@ -5,5 +5,5 @@ time=$(date)
 echo ::set-output name=time::$time
 pwd
 ls
-ls /
+touch testfile.from-docker
 
