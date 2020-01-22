@@ -4,6 +4,6 @@ echo "Hello $1"
 time=$(date)
 echo ::set-output name=time::$time
 pwd
-ls
 touch testfile.from-docker
+ls
 
