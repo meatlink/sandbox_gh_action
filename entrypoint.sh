@@ -1,7 +1,7 @@
 #!/bin/sh -l
 
 main () {
-    pwd ; ls
+    pwd ; ls ; id
     generate_jekyll_site
     generate_mdbook_content
     replace_content
