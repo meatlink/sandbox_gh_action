@@ -1,5 +1,10 @@
 #!/bin/sh -l
 
+
+CHIPMUNKDOCS_SRC_DIR="master_branch"
+CHIPMUNKDOCS_DEST_DIR="pages_branch"
+
+
 main () {
     pwd ; ls ; id
     generate_jekyll_site
@@ -11,27 +16,41 @@ main () {
 
 generate_jekyll_site () {
     (
-        cd master_branch
+        cd "$CHIPMUNKDOCS_SRC_DIR"
         bundle exec jekyll build
     )
 }
 
 generate_mdbook_content () {
     (
-        test -e "${HOME}/.cargo" || ln -s /root/.cargo "${HOME}/.cargo"
-        . "${HOME}/.cargo/env"
-        cd master_branch/book
+        enable_rust_environment
+        cd "${CHIPMUNKDOCS_SRC_DIR}/book"
         mdbook build
     )
 }
 
-replace_content () {
-    test -e pages_branch/build && rm -rf pages_branch/build
-    mv master_branch/_site pages_branch/build
-    test -e pages_branch/build/book && rm -rf pages_branch/build/book
-    mv master_branch/book/book pages_branch/build/book
+enable_rust_environment () {
+    # Required because $HOME is redefined when container is executed by GHA
+    test -e "${HOME}/.cargo" || ln -s "/root/.cargo" "${HOME}/.cargo"
+    . "${HOME}/.cargo/env"
 }
 
+replace_content () {
+    local dest_dir
+    dest_dir="${CHIPMUNKDOCS_DEST_DIR}/build"
+    replace_site_content
+    add_mdbook_to_site
+}
+
+replace_site_content () {
+    test -e "$dest_dir" && rm -rf "$dest_dir"
+    mv "${CHIPMUNKDOCS_SRC_DIR}/_site" "$dest_dir"
+}
+
+add_mdbook_to_site () {
+    test -e "${dest_dir}/book" && rm -rf "${dest_dir}/book"
+    mv "${CHIPMUNKDOCS_SRC_DIR}/book/book" "${dest_dir}/book"
+}
 
 commit_updated_files () {
     (
