@@ -18,7 +18,8 @@ generate_jekyll_site () {
 
 generate_mdbook_content () {
     (
-        . /root/.cargo/env
+        test -e "${HOME}/.cargo" || ln -s /root/.env "${HOME}/.cargo"
+        . "${HOME}/.cargo/env"
         cd master_branch/book
         mdbook build
     )
