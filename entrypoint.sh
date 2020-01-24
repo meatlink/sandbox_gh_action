@@ -39,6 +39,7 @@ commit_updated_files () {
         git add -A
         # TODO: commit
         git status
+        git diff
     )
 }
 
