@@ -1,8 +1,4 @@
-#!/bin/sh -l
-
-
-CHIPMUNKDOCS_SRC_DIR="master_branch"
-CHIPMUNKDOCS_DEST_DIR="pages_branch"
+#!/bin/sh
 
 
 main () {
@@ -61,5 +57,6 @@ commit_updated_files () {
         git diff --staged
     )
 }
+
 
 main

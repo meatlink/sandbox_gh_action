@@ -1,16 +1,15 @@
-name: 'Hello World'
+name: 'Build and push chipmunk docs'
 description: 'Greet someone and record the time'
 inputs:
-  who-to-greet:  # id of input
-    description: 'Who to greet'
+  src_dir:
+    description: 'Repository dir with documentation sources'
     required: true
-    default: 'World'
-outputs:
-  time: # id of output
-    description: 'The time we greeted you'
+  dest_dir:
+    description: 'Repository dir where results would be pushed'
+    required: true
 runs:
   using: 'docker'
-  # image: 'Dockerfile'
   image: 'docker://meatlink/chipmunk-docs-gha-builder:debug'
-  args:
-    - ${{ inputs.who-to-greet }}
+  env:
+    CHIPMUNKDOCS_SRC_DIR: ${{ inputs.src_dir }}
+    CHIPMUNKDOCS_DEST_DIR: ${{ inputs.dest_dir }}
