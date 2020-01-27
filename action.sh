@@ -1,5 +1,8 @@
 #!/bin/sh
 
+set -e
+set -u
+
 
 main () {
     pwd ; ls ; id
@@ -7,7 +10,6 @@ main () {
     generate_mdbook_content
     replace_content
     commit_updated_files
-    ls
 }
 
 generate_jekyll_site () {
@@ -19,16 +21,9 @@ generate_jekyll_site () {
 
 generate_mdbook_content () {
     (
-        enable_rust_environment
         cd "${CHIPMUNKDOCS_SRC_DIR}/book"
-        mdbook build
+        /mdbook build
     )
-}
-
-enable_rust_environment () {
-    # Required because $HOME is redefined when container is executed by GHA
-    test -e "${HOME}/.cargo" || ln -s "/root/.cargo" "${HOME}/.cargo"
-    . "${HOME}/.cargo/env"
 }
 
 replace_content () {
@@ -51,10 +46,10 @@ add_mdbook_to_site () {
 commit_updated_files () {
     (
         cd pages_branch
-        git add -A
+        #git add -A
         # TODO: commit
-        git status
-        git diff --staged
+        #git status
+        #git diff --staged
     )
 }
 
